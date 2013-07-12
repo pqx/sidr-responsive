@@ -275,6 +275,9 @@
             $body.removeAttr('style');
 
           });
+
+          $menu.removeClass('sidr-menu-portrait-left').removeClass('sidr-menu-portrait-right');
+          $body.removeClass('sidr-body-portrait');
           return;
         }
 
