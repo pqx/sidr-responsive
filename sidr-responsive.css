@@ -1,7 +1,12 @@
 * {
   padding: 0;
   margin: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+body {
 }
 
 .sidr-header {
@@ -58,7 +63,7 @@
   }
 
   .sidr-header-fix {
-    padding: 0 260px 0 0;
+    padding: 0 262px 0 0;
   }
 }
 

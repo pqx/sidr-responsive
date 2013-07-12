@@ -94,26 +94,39 @@
           return;
         }
 
-        if(bodyWidth > screenWidth) {
-          if(side === 'left') {
-            // $header.css({
-            //   'padding-right': menuWidth + 'px'
-            // });
-            headerAnimation = {'padding-right': menuWidth + 'px'};
+        if(bodyWidth > screenWidth) { // open in landscape mode
+          console.log('open in landscape');
 
-            bodyAnimation = {'margin-left': menuWidth};
+          if(side === 'left') {
+            // headerAnimation = {'padding-right': menuWidth + 'px'};
+
+            headerAnimation = {
+              'width': bodyWidth - menuWidth
+            };
+
+            bodyAnimation = {'margin-left': menuWidth + 'px'};
             menuAnimation = {left: '0'};
           } else if(side === 'right') {
-            headerAnimation = {'padding-right': menuWidth + 'px'};
+
+            // headerAnimation = {'padding-right': menuWidth + 'px'};
+            headerAnimation = {
+              'right': menuWidth + 'px', // padding-right not update well on safari (ipad)
+              'width': bodyWidth - menuWidth
+            };
+
             bodyAnimation = {'margin-right': menuWidth + 'px'};
             menuAnimation = {right: '0'};
           }
 
-          if(headerAnimation) {
-            $header.animate(headerAnimation, speed, function() {
-              $header.removeAttr('style').addClass(responsiveClass.header_fix);
-            });
+          if(side === 'right') {
+            $header.css({'right': 0});
           }
+
+          $header.animate(headerAnimation, speed, function() {
+            $header.removeAttr('style').addClass(responsiveClass.header_fix);
+          });
+
+
           $body.animate(bodyAnimation, speed, function() {
             $body.removeAttr('style').addClass(responsiveClass.body_class(side));
           });
@@ -125,12 +138,23 @@
           });
 
           return;
-        } else {
+        } else { // open in portrait mode
+
+          console.log('open in portrait mode');
+
+          // clear responsive class
+          $body.removeClass(responsiveClass.body_left).removeClass(responsiveClass.body_right);
+          $header.css({
+            'padding': '0 0 0 0'
+          }).removeClass(responsiveClass.header_fix).removeAttr('style');
+
           if(side === 'left') {
+            headerAnimation = {'left': menuWidth + 'px'}; // fixed header not move with body in safari, hardcode
             bodyAnimation = {left: menuWidth + 'px'};
             menuAnimation = {left: '0px'};
           } else if(side == 'right') {
-            bodyAnimation = {right: menuWidth + 'px'};
+            headerAnimation = {'padding-right': menuWidth + 'px'};
+            headerAnimation = bodyAnimation = {right: menuWidth + 'px'};
             menuAnimation = {right: '0px'};
           }
 
@@ -138,6 +162,12 @@
             width: $body.width(),
             position: 'absolute'
           }).animate(bodyAnimation, speed);
+
+          if(headerAnimation) {
+            $header.css({
+              width: $body.width()
+            }).animate(headerAnimation, speed);
+          }
 
           if(side === 'left') {
             $menu.css({
@@ -173,17 +203,48 @@
           return;
         }
 
-        if(bodyWidth > screenWidth) {
+        if(bodyWidth > screenWidth) { // close in landscape
 
-          console.log('close menu in landscape');
+          console.log('close in landscape');
+
+          headerAnimation = {
+            'width': bodyWidth + menuWidth
+          };
+
 
           if(side === 'left') {
-            headerAnimation = {'padding-right': 0};
             bodyAnimation = {'margin-left': 0};
             menuAnimation = {left: '-' + menuWidth + 'px'};
           } else if(side === 'right') {
-            headerAnimation = {'padding-right': 0};
             bodyAnimation = {'margin-right': 0};
+            menuAnimation = {right: '-' + menuWidth + 'px'};
+          }
+
+          $header.animate(headerAnimation, speed, function() {
+            $header.removeAttr('style').toggleClass(responsiveClass.header_fix);
+          });
+
+          $body.animate(bodyAnimation, speed, function() {
+            $body.removeAttr('style')
+              .removeClass(responsiveClass.body_left)
+              .removeClass(responsiveClass.body_right);
+          });
+          $menu.animate(menuAnimation, speed, function() {
+            $menu.removeClass(responsiveClass.menu);
+          });
+          return;
+        } else { // close in portrait
+
+          console.log('close in portrait');
+
+          if(side === 'left') {
+            headerAnimation = {'left': 0};
+            bodyAnimation = {left: 0};
+            menuAnimation = {left: '-' + menuWidth + 'px'};
+
+          } else if(side === 'right') {
+            headerAnimation = {'right': 0};
+            bodyAnimation = {right: 0};
             menuAnimation = {right: '-' + menuWidth + 'px'};
           }
 
@@ -200,6 +261,9 @@
           });
           $menu.animate(menuAnimation, speed, function() {
             $menu.removeClass(responsiveClass.menu);
+            $menu.removeAttr('style');
+            $body.removeAttr('style');
+
           });
           return;
         }
@@ -334,9 +398,10 @@
           data = $this.data('sidr');
 
       // If the plugin hasn't been initialized yet
-      if ( ! data ) {
+      if (!data) {
         $this.data('sidr', name);
-        $this.click(function(e) {
+        $this.on('click', function(e) {
+          console.log('trigger');
           e.preventDefault();
           methods.toogle(name);
         });
