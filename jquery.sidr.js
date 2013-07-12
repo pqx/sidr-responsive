@@ -1,12 +1,4 @@
-/*
- * Sidr
- * https://github.com/artberri/sidr
- *
- * Copyright (c) 2013 Alberto Varela
- * Licensed under the MIT license.
- */
-
-;(function( $ ){
+;(function($){
 
   var sidrMoving = false;
   var sidrOpened = false;
@@ -17,8 +9,9 @@
     menu: 'sidr-show',
     body_left: 'body-left-sidr',
     body_right: 'body-right-sidr',
+    header_fix: 'sidr-header-fix',
     body_class: function(side) {
-      return (side === 'left') ? responsiveClass.body_left : responsiveClass.body_right
+      return (side === 'left') ? responsiveClass.body_left : responsiveClass.body_right;
     }
   };
 
@@ -77,16 +70,17 @@
       var side = $menu.data('side');
       var bodyAnimation;
       var menuAnimation;
+      var headerAnimation;
       var scrollTop;
 
       if(action === 'init') { // just there
         console.log('init action **adding responsive class no animation');
+        $header.toggleClass(responsiveClass.header_fix);
 
         if(side === 'left') {
           $body.toggleClass(responsiveClass.body_left);
           $menu.toggleClass(responsiveClass.menu);
         } else if(side === 'right') {
-          $header.toggleClass('header-fix-sidr');
           $body.toggleClass(responsiveClass.body_right);
           $menu.toggleClass(responsiveClass.menu);
         }
@@ -101,9 +95,12 @@
         }
 
         if(bodyWidth > screenWidth) {
-          console.log('open a menu in lanscape **adding responsive class');
-
           if(side === 'left') {
+            // $header.css({
+            //   'padding-right': menuWidth + 'px'
+            // });
+            headerAnimation = {'padding-right': menuWidth + 'px'};
+
             bodyAnimation = {'margin-left': menuWidth};
             menuAnimation = {left: '0'};
           } else if(side === 'right') {
@@ -112,9 +109,11 @@
             menuAnimation = {right: '0'};
           }
 
-          $header.animate(headerAnimation, speed, function() {
-            $header.removeAttr('style');
-          });
+          if(headerAnimation) {
+            $header.animate(headerAnimation, speed, function() {
+              $header.removeAttr('style').addClass(responsiveClass.header_fix);
+            });
+          }
           $body.animate(bodyAnimation, speed, function() {
             $body.removeAttr('style').addClass(responsiveClass.body_class(side));
           });
@@ -127,8 +126,6 @@
 
           return;
         } else {
-          console.log('open a menu in portrait **no responsive class');
-
           if(side === 'left') {
             bodyAnimation = {left: menuWidth + 'px'};
             menuAnimation = {left: '0px'};
@@ -175,11 +172,13 @@
         if( !$menu.is(':visible') || sidrMoving ) {
           return;
         }
+
         if(bodyWidth > screenWidth) {
 
           console.log('close menu in landscape');
 
           if(side === 'left') {
+            headerAnimation = {'padding-right': 0};
             bodyAnimation = {'margin-left': 0};
             menuAnimation = {left: '-' + menuWidth + 'px'};
           } else if(side === 'right') {
@@ -188,7 +187,12 @@
             menuAnimation = {right: '-' + menuWidth + 'px'};
           }
 
-          $header.animate(headerAnimation, speed);
+          if(headerAnimation) {
+            $header.animate(headerAnimation, speed, function() {
+              $header.toggleClass(responsiveClass.header_fix);
+            });
+          }
+
           $body.animate(bodyAnimation, speed, function() {
             $body.removeAttr('style')
               .removeClass(responsiveClass.body_left)
@@ -277,7 +281,7 @@
         $sideMenu = $('#' + name);
 
     // If the side menu do not exist create it
-    if( $sideMenu.length === 0 ) {
+    if($sideMenu.length === 0) {
       $sideMenu = $('<div />')
         .attr('id', name)
         .appendTo($('body'));
@@ -295,7 +299,7 @@
 
 
     // The menu content
-    if (typeof settings.source === 'function') {
+    if(typeof settings.source === 'function') {
       var newContent = settings.source(name);
       privateMethods.loadContent($sideMenu, newContent);
     } else if(typeof settings.source === 'string' && privateMethods.isUrl(settings.source)) {
@@ -340,4 +344,4 @@
     });
   };
 
-})( jQuery );
+})(jQuery);
