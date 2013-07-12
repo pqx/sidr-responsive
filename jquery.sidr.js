@@ -149,7 +149,9 @@
           }).removeClass(responsiveClass.header_fix).removeAttr('style');
 
           if(side === 'left') {
-            headerAnimation = {'left': menuWidth + 'px'}; // fixed header not move with body in safari, hardcode
+            headerAnimation = {
+              'left': menuWidth + 'px'
+            };
             bodyAnimation = {left: menuWidth + 'px'};
             menuAnimation = {left: '0px'};
           } else if(side == 'right') {
@@ -158,16 +160,18 @@
             menuAnimation = {right: '0px'};
           }
 
-          $body.css({
-            width: $body.width(),
-            position: 'absolute'
-          }).animate(bodyAnimation, speed);
+          // $body.css({
+          //   width: $body.width(),
+          //   position: 'absolute'
+          // }).animate(bodyAnimation, speed);
 
-          if(headerAnimation) {
-            $header.css({
-              width: $body.width()
-            }).animate(headerAnimation, speed);
-          }
+          $body.animate(bodyAnimation, speed, function() {
+            $body.removeAttr('style').addClass('sidr-body-portrait');
+          });
+
+          $header.animate(headerAnimation, speed, function() {
+            $header.removeAttr('style').addClass('sidr-header-portrait');
+          });
 
           if(side === 'left') {
             $menu.css({
@@ -181,7 +185,7 @@
             });
           }
           $menu.animate(menuAnimation, speed, function() {
-            // $menu.removeAttr('style');
+            $menu.removeAttr('style').addClass('sidr-menu-portrait-left');
           });
           return;
         }
@@ -221,7 +225,7 @@
           }
 
           $header.animate(headerAnimation, speed, function() {
-            $header.removeAttr('style').toggleClass(responsiveClass.header_fix);
+            $header.removeAttr('style');
           });
 
           $body.animate(bodyAnimation, speed, function() {
@@ -232,10 +236,16 @@
           $menu.animate(menuAnimation, speed, function() {
             $menu.removeClass(responsiveClass.menu);
           });
+
+          $header.removeClass('sidr-header-portrait').removeClass('sidr-header-fix');
+          $body.removeClass('sidr-body-portrait');
           return;
         } else { // close in portrait
 
           console.log('close in portrait');
+
+          $menu.removeClass('sidr-header-portrait');
+
 
           if(side === 'left') {
             headerAnimation = {'left': 0};
