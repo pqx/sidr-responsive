@@ -13,6 +13,17 @@
 
   var screenWidth = 767;
 
+  var responsiveClass = {
+    menu: 'sidr-show',
+    body_left: 'body-left-sidr',
+    body_right: 'body-right-sidr',
+    body_class: function(side) {
+      return (side === 'left') ? responsiveClass.body_left : responsiveClass.body_right
+    }
+  };
+
+  var $header = $('#header');
+
   // Private methods
   var privateMethods = {
     // Check for valids urls
@@ -36,8 +47,8 @@
     },
     // Add sidr prefixes
     addPrefix: function($element) {
-      var elementId = $element.attr('id'),
-          elementClass = $element.attr('class');
+      var elementId = $element.attr('id');
+      var elementClass = $element.attr('class');
 
       if(typeof elementId === 'string' && '' !== elementId) {
         $element.attr('id', elementId.replace(/([A-Za-z0-9_.\-]+)/g, 'sidr-id-$1'));
@@ -52,8 +63,7 @@
       if(typeof name === 'function') {
         callback = name;
         name = 'sidr';
-      }
-      else if(!name) {
+      } else if(!name) {
         name = 'sidr';
       }
 
@@ -70,9 +80,16 @@
       var scrollTop;
 
       if(action === 'init') { // just there
-        console.log('it will be just there');
-        $body.toggleClass('body-left-sidr');
-        $menu.toggleClass('sidr-show');
+        console.log('init action **adding responsive class no animation');
+
+        if(side === 'left') {
+          $body.toggleClass(responsiveClass.body_left);
+          $menu.toggleClass(responsiveClass.menu);
+        } else if(side === 'right') {
+          $header.toggleClass('header-fix-sidr');
+          $body.toggleClass(responsiveClass.body_right);
+          $menu.toggleClass(responsiveClass.menu);
+        }
         return;
       }
 
@@ -89,14 +106,17 @@
           if(side === 'left') {
             bodyAnimation = {'margin-left': menuWidth};
             menuAnimation = {left: '0'};
-          }
-          else {
-            bodyAnimation = {right: menuWidth + 'px'};
+          } else if(side === 'right') {
+            headerAnimation = {'padding-right': menuWidth + 'px'};
+            bodyAnimation = {'margin-right': menuWidth + 'px'};
             menuAnimation = {right: '0'};
           }
 
+          $header.animate(headerAnimation, speed, function() {
+            $header.removeAttr('style');
+          });
           $body.animate(bodyAnimation, speed, function() {
-            $body.removeAttr('style').addClass('body-left-sidr');
+            $body.removeAttr('style').addClass(responsiveClass.body_class(side));
           });
           $menu.css({
             'display': 'block',
@@ -127,124 +147,36 @@
           });
           return;
         }
-
-
-        // If another menu opened close first
-        if(sidrOpened !== false) {
-          methods.close(sidrOpened, function() {
-            methods.open(name);
-          });
-
-          return;
-        }
-
-        // Lock sidr
-        sidrMoving = true;
-
-        // Left or right?
-        if(side === 'left') {
-          bodyAnimation = {left: menuWidth + 'px'};
-          menuAnimation = {left: '0px'};
-        }
-        else {
-          bodyAnimation = {right: menuWidth + 'px'};
-          menuAnimation = {right: '0px'};
-        }
-
-        // Prepare page
-        scrollTop = $html.scrollTop();
-        $html.css('overflow-x', 'hidden').scrollTop(scrollTop);
-
-        // Open menu
-        if($body.outerWidth() > screenWidth) {
-          console.log('no animation, buddy');
-          $body.addClass('body-left-sidr');
-        } else {
-          $body.css({
-            width: $body.width(),
-            position: 'absolute'
-          }).animate(bodyAnimation, speed);
-        }
-
-        if($menu.hasClass('sidr-show')) { // it get hidden on small screen, call with init
-          // force show
-          $menu.removeClass('sidr-show');
-        }
-
-        $menu.css('display', 'block').animate(menuAnimation, speed, function() {
-          $menu.css('display', '').addClass('sidr-always-show');
-          sidrMoving = false;
-          sidrOpened = name;
-          // Callback
-          if(typeof callback === 'function') {
-            callback(name);
-          }
-        });
-      }
-      // Close Sidr
-      else {
+      } else { // Close Sidr
 
         // Check if we can close it
         if( !$menu.is(':visible') || sidrMoving ) {
           return;
         }
-        var bodyWidth = $body.outerWidth();
         if(bodyWidth > screenWidth) {
+
+          console.log('close menu in landscape');
+
           if(side === 'left') {
             bodyAnimation = {'margin-left': 0};
             menuAnimation = {left: '-' + menuWidth + 'px'};
-          } else {
+          } else if(side === 'right') {
+            headerAnimation = {'padding-right': 0};
+            bodyAnimation = {'margin-right': 0};
+            menuAnimation = {right: '-' + menuWidth + 'px'};
           }
 
-        $body.animate(bodyAnimation, speed, function() {
-          $body.removeAttr('style').removeClass('body-left-sidr', 'body-right-sidr');
-        });
-        $menu.animate(menuAnimation, speed, function() {
-          // $menu.removeAttr('style').removeClass('sidr-show');
-          $menu.removeClass('sidr-show');
-        });
-        return;
-      }
-
-        // if($menu.hasClass('sidr-show') || $body.hasClass('body-left-sidr')) {
-        //   console.log('you are from init');
-        //   $body.removeClass('body-left-sidr');
-        //   $menu.removeClass('sidr-show');
-        //   return;
-        // }
-
-        console.log('close the sidr with animation');
-
-        // Lock sidr
-        sidrMoving = true;
-
-        // Right or left menu?
-        if(side === 'left') {
-          bodyAnimation = {left: 0};
-          menuAnimation = {left: '-' + menuWidth + 'px'};
+          $header.animate(headerAnimation, speed);
+          $body.animate(bodyAnimation, speed, function() {
+            $body.removeAttr('style')
+              .removeClass(responsiveClass.body_left)
+              .removeClass(responsiveClass.body_right);
+          });
+          $menu.animate(menuAnimation, speed, function() {
+            $menu.removeClass(responsiveClass.menu);
+          });
+          return;
         }
-        else {
-          bodyAnimation = {right: 0};
-          menuAnimation = {right: '-' + menuWidth + 'px'};
-        }
-
-        // Close menu
-        scrollTop = $html.scrollTop();
-        $html.removeAttr('style').scrollTop(scrollTop);
-        $body.animate(bodyAnimation, speed);
-
-        $menu.animate(menuAnimation, speed, function() {
-          $menu.removeAttr('style');
-          $body.removeAttr('style');
-          $('html').removeAttr('style');
-          sidrMoving = false;
-          sidrOpened = false;
-          // Callback
-          if(typeof callback === 'function') {
-            callback(name);
-          }
-        });
-
       }
     }
   };
@@ -318,8 +250,8 @@
         privateMethods.loadContent($sideMenu, data);
       });
     } else if(typeof settings.source === 'string') {
-      var htmlContent = '',
-          selectors   = settings.source.split(',');
+      var htmlContent = '';
+      var selectors   = settings.source.split(',');
 
       $.each(selectors, function(index, element) {
         htmlContent += '<div class="sidr-inner">' + $(element).html() + '</div>';
