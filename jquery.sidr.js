@@ -79,6 +79,7 @@
 
       // Declaring
       var $menu = $('#' + name);
+      var $header = $($menu.data('header'));
       var $body = $($menu.data('body'));
       var $html = $('html');
       var menuWidth = $menu.outerWidth(true);
@@ -125,11 +126,16 @@
         return;
       }
 
+      console.log($body);
+      console.log($header);
+
       if('open' === action || ('toogle' === action && !$menu.is(':visible'))) {
         // Check if we can open it
         if( $menu.is(':visible') || sidrMoving ) { return; }
 
         if(bodyWidth > screenWidth) { // open in landscape
+          console.log('open in landscape');
+
           if(side === 'left') {
             headerAnimation = { 'width': bodyWidth - menuWidth };
             bodyAnimation = {'margin-left': menuWidth + 'px'};
@@ -360,7 +366,8 @@
       side          : 'left', // Accepts 'left' or 'right'
       source        : null,   // Override the source of the content.
       renaming      : true,   // The ids and classes will be prepended with a prefix when loading existent content
-      body          : 'body'  // Page container selector,
+      body          : 'body',  // Page container selector,
+      header        : 'header' // fixed header selector
     }, options);
 
     var name = settings.name,
@@ -380,6 +387,7 @@
       .data({
         speed          : settings.speed,
         side           : settings.side,
+        header         : settings.header,
         body           : settings.body
       });
 
@@ -417,13 +425,11 @@
     return this.each(function(){
 
       var $this = $(this),
-          data = $this.data('sidr');
+        data = $this.data('sidr');
 
-      // If the plugin hasn't been initialized yet
-      if (!data) {
+      if(!data) {
         $this.data('sidr', name);
         $this.on('click', function(e) {
-          console.log('trigger');
           e.preventDefault();
           methods.toogle(name);
         });
