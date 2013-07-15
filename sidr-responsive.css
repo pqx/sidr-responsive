@@ -6,18 +6,6 @@
   box-sizing: border-box;
 }
 
-body {
-}
-
-.sidr-header {
-  width: 100%;
-  height: 60px;
-  background: #efa;
-  font-size: 28px;
-  position: fixed;
-  top: 0;
-}
-
 .sidr {
   display: none;
   width: 260px;
@@ -39,72 +27,32 @@ body {
   right: 0;
 }
 
-.body-sdir {
-  margin: 0 0 0 0;
-}
-
 @media screen and (min-width: 767px) {
-  .sidr-content {
-    margin: 0 auto;
-    border: 1px solid #eee;
-    max-width: 600px;
-  }
 
-  .sidr-show {
-    display: block;
-  }
+  .sidr-menu { display: block; }
+  .sidr-header { padding: 0 260px 0 0; }
+  .sidr-content { margin: 0 auto; border: 1px solid #eee; max-width: 600px; }
+  .sidr-body-left { margin: 0 0 0 260px; }
+  .sidr-body-right { margin: 0 260px 0 0; }
 
-  .sidr-menu-portrait-left {
-    display: block;
-  }
+  .sidr-menu-left-portrait { display: block; }
+  .sidr-header-left-portrait { padding: 0 260px 0 0; }
+  .sidr-header-right-portrait { padding: 0 260px 0 0; }
+  .sidr-body-left-portrait { position: static; margin: 0 0 0 260px; }
+  .sidr-body-right-portrait { position: static; margin: 0 260px 0 0; }
 
-  .body-left-sidr {
-    margin: 0 0 0 260px;
-  }
-
-  .body-right-sidr {
-    margin: 0 260px 0 0;
-  }
-
-  .sidr-header-fix {
-    padding: 0 260px 0 0;
-  }
-
-  .sidr-header-portrait {
-    padding: 0 260px 0 0;
-  }
-
-  .sidr-body-portrait {
-    position: static;
-    margin: 0 0 0 260px;
-  }
 }
 
 
 @media screen and (max-width: 767px) {
-  .sidr-show {
-    display: none;
-  }
 
-  .body-left-sidr {
-    margin: 0 0 0 0;
-  }
+  .sidr-menu { display: none; }
+  .sidr-header { padding: 0 0 0 0; }
+  .sidr-body-left { margin: 0 0 0 0; }
+  .sidr-body-right { margin: 0 0 0 0; }
 
-  .body-right-sidr {
-    margin: 0 0 0 0;
-  }
-  .sidr-header-fix {
-    padding: 0 0 0 0;
-  }
-
-
-  .sidr-body-portrait {
-    position: absolute;
-    left: 260px;
-    width: 700px; /* hardcode --> partial hidden effect */
-  }
-  .sidr-menu-portrait-left {
-    display: block;
-  }
-
+  .sidr-body-left-portrait { position: absolute; left: 260px; width: 760px; }
+  .sidr-body-right-portrait { position: absolute; right: 260px; width: 760px; }
+  .sidr-menu-left-portrait { display: block; }
+  .sidr-header-right-portrait { right: 260px; }
 }

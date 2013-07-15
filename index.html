@@ -12,6 +12,14 @@
     <link rel="stylesheet" type="text/css" href="sidr-theme.css">
 
     <style type="text/css">
+    #header {
+      width: 100%;
+      height: 60px;
+      background: #efa;
+      font-size: 28px;
+      position: fixed;
+      top: 0;
+    }
     #content {
       margin-top: 70px;
     }
@@ -23,7 +31,7 @@
   </head>
   <body>
 
-    <div id="header" class="sidr-header">
+    <div id="header">
       <div id="header-inner">
         <a id="left-menu">L</a>
         <a id="right-menu">R</a>
@@ -119,8 +127,8 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Maecenas fau
         name: 'sidr-right'
       });
 
-      // $.sidr('init', 'sidr-right');
-
+      // $.sidr('init', 'sidr-left');
+      $.sidr('init', 'sidr-right');
     });
     </script>
   </body>
