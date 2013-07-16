@@ -98,8 +98,6 @@
       });
 
       if(action === 'init') { // no animation
-        console.log('init action **adding responsive class no animation');
-
         if(side === 'left') {
           if(bodyWidth > screenWidth) { // safari
             $header.css({
@@ -125,22 +123,24 @@
         return;
       }
 
+      // open the menu
+
       if('open' === action || ('toggle' === action && !$menu.is(':visible'))) {
         // Check if we can open it
-        if( $menu.is(':visible') || sidrMoving ) { return; }
+        if($menu.is(':visible') || sidrMoving) { return; }
 
         if(bodyWidth > screenWidth) { // open in landscape
-          console.log('open in landscape');
-
           if(side === 'left') {
             headerAnimation = { 'padding-left': menuWidth + 'px' };
-            bodyAnimation = {'margin-left': menuWidth + 'px'};
+            // bodyAnimation = {'margin-left': menuWidth + 'px'};
             menuAnimation = {left: '0'};
           } else if(side === 'right') {
             headerAnimation = { 'padding-right': menuWidth + 'px' };
             bodyAnimation = {'margin-right': menuWidth + 'px'};
             menuAnimation = {right: '0'};
           }
+
+          // $header.css('-webkit-transition':'padding-left 1s linear','padding-left':menuWidth);
 
           $header.animate(headerAnimation, speed, function() {
             $header.removeAttr('style')
@@ -150,27 +150,7 @@
           $body.animate(bodyAnimation, speed, function() {
             $body.removeAttr('style').addClass(responsiveClass.body_class(side));
           });
-
-          // render the menu before animation
-          $menu.css('display', 'block');
-          if(side === 'left') {
-            $menu.css({
-              'left': '-' + menuWidth + 'px'
-            });
-          } else if(side === 'right') {
-            $menu.css({
-              'display': 'block',
-              'right': '-' + menuWidth + 'px'
-            });
-          }
-          $menu.animate(menuAnimation, speed, function() {
-            $menu.removeAttr('style').addClass(responsiveClass.menu);
-          });
-
-          return;
         } else { // open in portrait
-
-          console.log('open in portrait');
           if(side === 'left') {
             headerAnimation = bodyAnimation = {left: menuWidth + 'px'};
             menuAnimation = {left: '0px'};
@@ -188,148 +168,78 @@
             $body.removeAttr('style')
               .addClass(responsiveClass.body_portrait_class(side));
           });
-
-          // render the menu before animation
-          $menu.css('display', 'block');
-          if(side === 'left') {
-            $menu.css({
-              'left': '-' + menuWidth + 'px'
-            });
-          } else if(side === 'right') {
-            $menu.css({
-              'display': 'block',
-              'right': '-' + menuWidth + 'px'
-            });
-          }
-          $menu.animate(menuAnimation, speed, function() {
-            $menu.removeAttr('style').addClass(responsiveClass.menu_left_portrait);
-          });
-          return;
         }
 
-
-        // If another menu opened close first
-        if(sidrOpened !== false) {
-          methods.close(sidrOpened, function() {
-            methods.open(name);
-          });
-
-          return;
-        }
-
-      } else {
-
-        if( !$menu.is(':visible') || sidrMoving ) { return; }
-
-        if(bodyWidth > screenWidth) { // close in landscape
-          headerAnimation = {
-            'width': bodyWidth + menuWidth
-          };
-
-          if(side === 'left') {
-            headerAnimation = { 'padding-left': 0, 'width': bodyWidth + menuWidth }; // width in safari
-            bodyAnimation = {'margin-left': 0};
-            menuAnimation = {left: '-' + menuWidth + 'px'};
-          } else if(side === 'right') {
-            bodyAnimation = {'margin-right': 0};
-            menuAnimation = {right: '-' + menuWidth + 'px'};
-          }
-
-          $header.animate(headerAnimation, speed, function() {
-            $header.removeAttr('style')
-              .removeClass(responsiveClass.header_left)
-              .removeClass(responsiveClass.header_right)
-              .removeClass(responsiveClass.header_left_portrait)
-              .removeClass(responsiveClass.header_right_portrait)
-              .css('display', 'block');
-          });
-
-          $body.animate(bodyAnimation, speed, function() {
-            $body.removeAttr('style')
-              .removeClass(responsiveClass.body_left)
-              .removeClass(responsiveClass.body_right)
-              .removeClass(responsiveClass.body_left_portrait)
-              .removeClass(responsiveClass.body_right_portrait);
-          });
-
-          $menu.animate(menuAnimation, speed, function() {
-            $menu.removeAttr('style')
-              .removeClass(responsiveClass.menu)
-              .removeClass(responsiveClass.menu_left_portrait)
-              .removeClass(responsiveClass.menu_right_portrait);
-          });
-
-          return;
-        } else { // close in portrait
-
-          console.log('close in portrait');
-
-          if(side === 'left') {
-            headerAnimation = {'left': 0};
-            bodyAnimation = {left: 0};
-            menuAnimation = {left: '-' + menuWidth + 'px'};
-
-          } else if(side === 'right') {
-            headerAnimation = {'right': 0};
-            bodyAnimation = {right: 0};
-            menuAnimation = {right: '-' + menuWidth + 'px'};
-          }
-
-          $header.animate(headerAnimation, speed, function() {
-            $header.removeAttr('style')
-              .removeClass(responsiveClass.header_left)
-              .removeClass(responsiveClass.header_right)
-              .removeClass(responsiveClass.header_left_portrait)
-              .removeClass(responsiveClass.header_right_portrait)
-              .css('display', 'block');
-          });
-          $body.animate(bodyAnimation, speed, function() {
-            $body.removeAttr('style')
-              .removeClass(responsiveClass.body_left)
-              .removeClass(responsiveClass.body_right)
-              .removeClass(responsiveClass.body_left_portrait)
-              .removeClass(responsiveClass.body_right_portrait);
-          });
-          $menu.animate(menuAnimation, speed, function() {
-            $menu.removeAttr('style')
-              .removeClass(responsiveClass.menu)
-              .removeClass(responsiveClass.menu_left_portrait)
-              .removeClass(responsiveClass.menu_right_portrait);
-          });
-          return;
-        }
-
-        // Lock sidr
-        sidrMoving = true;
-
-        // Right or left menu?
+        // menu animation
+        // render the menu before animation
+        $menu.css('display', 'block');
         if(side === 'left') {
+          $menu.css({ 'left': '-' + menuWidth + 'px' });
+        } else if(side === 'right') {
+          $menu.css({ 'right': '-' + menuWidth + 'px' });
+        }
+        $menu.animate(menuAnimation, speed, function() {
+          $menu.removeAttr('style')
+            .addClass(bodyWidth > screenWidth ? responsiveClass.menu : responsiveClass.menu_left_portrait);
+        });
+
+        return;
+      }
+
+      // close the menu
+
+      if( !$menu.is(':visible') || sidrMoving ) { return; }
+
+      if(bodyWidth > screenWidth) { // close in landscape
+        headerAnimation = { 'width': bodyWidth + menuWidth };
+
+        if(side === 'left') {
+          headerAnimation = { 'padding-left': 0, 'width': bodyWidth + menuWidth }; // width in safari
+          bodyAnimation = {'margin-left': 0};
+          menuAnimation = {left: '-' + menuWidth + 'px'};
+        } else if(side === 'right') {
+          bodyAnimation = {'margin-right': 0};
+          menuAnimation = {right: '-' + menuWidth + 'px'};
+        }
+      } else { // close in portrait
+        if(side === 'left') {
+          headerAnimation = {'left': 0};
           bodyAnimation = {left: 0};
           menuAnimation = {left: '-' + menuWidth + 'px'};
-        }
-        else {
+
+        } else if(side === 'right') {
+          headerAnimation = {'right': 0};
           bodyAnimation = {right: 0};
           menuAnimation = {right: '-' + menuWidth + 'px'};
         }
-
-        // Close menu
-        scrollTop = $html.scrollTop();
-        $html.removeAttr('style').scrollTop(scrollTop);
-        $body.animate(bodyAnimation, speed);
-
-        $menu.animate(menuAnimation, speed, function() {
-          $menu.removeAttr('style');
-          $body.removeAttr('style');
-          $('html').removeAttr('style');
-          sidrMoving = false;
-          sidrOpened = false;
-          // Callback
-          if(typeof callback === 'function') {
-            callback(name);
-          }
-        });
-
       }
+
+      // animation
+      $header.animate(headerAnimation, speed, function() {
+        $header.removeAttr('style')
+          .removeClass(responsiveClass.header_left)
+          .removeClass(responsiveClass.header_right)
+          .removeClass(responsiveClass.header_left_portrait)
+          .removeClass(responsiveClass.header_right_portrait)
+          .css('display', 'block');
+      });
+
+      $body.animate(bodyAnimation, speed, function() {
+        $body.removeAttr('style')
+          .removeClass(responsiveClass.body_left)
+          .removeClass(responsiveClass.body_right)
+          .removeClass(responsiveClass.body_left_portrait)
+          .removeClass(responsiveClass.body_right_portrait);
+      });
+
+      $menu.animate(menuAnimation, speed, function() {
+        $menu.removeAttr('style')
+          .removeClass(responsiveClass.menu)
+          .removeClass(responsiveClass.menu_left_portrait)
+          .removeClass(responsiveClass.menu_right_portrait);
+      });
+
+      return;
     }
   };
 

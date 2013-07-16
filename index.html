@@ -27,10 +27,24 @@
       position: fixed;
       top: 0;
       z-index: 100;
+      border-bottom: 1px solid #eee;
+    }
+    #header a {
+      display: inline-block;
+      background: white;
+      cursor: pointer;
+      line-height: 60px;
+      padding: 0px 10px;
+    }
+    #header-logo {
+      width: 200px;
+      margin: 0 auto;
+      position: relative;
+      top: -40px;
     }
     #content {
       margin: 0 auto;
-      max-width: 600px;
+      max-width: 60%;
     }
 
     #right-menu {
@@ -41,11 +55,11 @@
   <body>
 
     <div id="header">
-      <div id="header-inner">
-        <a id="left-menu">L</a>
-        <a id="right-menu">R</a>
+      <a id="left-menu">L</a>
+      <a id="right-menu">R</a>
+      <div id="header-logo">
+        Here the logo
       </div>
-
     </div>
 
     <div id="container">
