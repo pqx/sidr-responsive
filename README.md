@@ -5,5 +5,7 @@ responsive side menu
 
 Inspired by [sidr](https://github.com/artberri/sidr)
 
-+ Init action without animation
-+ landscape & portrait mode
++ Init action
++ Remove jquery animation
++ Landscape & portrait mode
++ Fixed top header support & not working on the body element
