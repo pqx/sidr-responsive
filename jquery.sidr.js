@@ -130,13 +130,10 @@
       }
 
       // open the menu
-
       if('open' === action || ('toggle' === action && !$menu.is(':visible'))) {
 
         // Check if we can open it
         if($menu.is(':visible') || sidrMoving) { return; }
-
-        console.log('open');
 
         if(bodyWidth > screenWidth) { // open in landscape
           $header.addClass(responsiveClass.header_class(side));
