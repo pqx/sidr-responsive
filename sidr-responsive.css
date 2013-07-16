@@ -12,12 +12,23 @@
   color: #333;
 }
 
-.sidr.left {
+.sidr-left {
   left: 0;
 }
-.sidr.right {
+.sidr-right {
   right: 0;
 }
+
+/* transition start (optional) */
+/*.sidr-header {
+  transition: padding 0.5s linear;
+}
+
+.sidr-body {
+  transition: margin 0.5s linear;
+}
+*/
+/* transition end */
 
 .sidr-header-left, .sidr-header-right,
 .sidr-header-left-portrait, .sidr-header-right-portrait {
@@ -28,7 +39,8 @@
 
 @media screen and (min-width: 767px) {
 
-  .sidr-menu { display: block; }
+  .sidr-menu-left { left: 0; display: block; }
+  .sidr-menu-right { right: 0; display: block; }
   .sidr-header-left { padding: 0 0 0 260px; }
   .sidr-header-right { padding: 0 260px 0 0; }
   .sidr-body-left { margin: 0 0 0 260px; }
@@ -45,7 +57,8 @@
 
 @media screen and (max-width: 767px) {
 
-  .sidr-menu { display: none; }
+  .sidr-menu-left { display: none; }
+  .sidr-menu-right { display: none; }
   .sidr-header-left { padding: 0 0 0 0; }
   .sidr-header-right { padding: 0 0 0 0; }
   .sidr-body-left { margin: 0 0 0 0; }
