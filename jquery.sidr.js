@@ -103,29 +103,10 @@
       $(window).resize(function() {
       });
 
-      if(action === 'init') { // no animation
-        if(side === 'left') {
-          if(bodyWidth > screenWidth) { // safari
-            $header.css({
-              'right': 0,
-              'width': bodyWidth - menuWidth
-            });
-
-          }
-
-          $body.addClass(responsiveClass.body_left);
-          $menu.addClass(responsiveClass.menu);
-        } else if(side === 'right') {
-
-          if(bodyWidth > screenWidth) { // safari
-            $header.css({
-              'width': bodyWidth - menuWidth
-            });
-          }
-
-          $body.addClass(responsiveClass.body_right);
-          $menu.addClass(responsiveClass.menu);
-        }
+      if(action === 'init') {
+        $header.addClass(responsiveClass.header_class(side));
+        $body.addClass(responsiveClass.body_class(side));
+        $menu.addClass(responsiveClass.menu_class(side));
         return;
       }
 
@@ -138,12 +119,10 @@
         if(bodyWidth > screenWidth) { // open in landscape
           $header.addClass(responsiveClass.header_class(side));
           $body.addClass(responsiveClass.body_class(side));
-
           $menu.addClass(responsiveClass.menu_class(side));
         } else { // open in portrait
           $header.addClass(responsiveClass.header_portrait_class(side));
           $body.addClass(responsiveClass.body_portrait_class(side));
-
           $menu.addClass(responsiveClass.menu_left_portrait);
         }
         return;
