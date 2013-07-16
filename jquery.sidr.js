@@ -7,7 +7,8 @@
 
   responsiveClass = {
     menu: 'sidr-menu',
-    header: 'sidr-header',
+    header_left: 'sidr-header-left',
+    header_right: 'sidr-header-right',
     body_left: 'sidr-body-left',
     body_right: 'sidr-body-right',
     content: 'sidr-content',
@@ -19,8 +20,9 @@
     header_left_portrait: 'sidr-header-left-portrait',
     header_right_portrait: 'sidr-header-right-portrait',
 
-
-
+    header_class: function(side) {
+      return (side === 'left') ? responsiveClass.header_left : responsiveClass.header_right;
+    },
     body_class: function(side) {
       return (side === 'left') ? responsiveClass.body_left : responsiveClass.body_right;
     },
@@ -91,6 +93,10 @@
       var headerAnimation;
       var scrollTop;
 
+      // fix when window resize
+      $(window).resize(function() {
+      });
+
       if(action === 'init') { // no animation
         console.log('init action **adding responsive class no animation');
 
@@ -101,9 +107,6 @@
               'width': bodyWidth - menuWidth
             });
 
-            $(window).resize(function() {
-              $header.addClass(responsiveClass.header).removeAttr('style');
-            });
           }
 
           $body.addClass(responsiveClass.body_left);
@@ -114,10 +117,6 @@
             $header.css({
               'width': bodyWidth - menuWidth
             });
-
-            $(window).resize(function() {
-              $header.addClass(responsiveClass.header).removeAttr('style');
-            });
           }
 
           $body.addClass(responsiveClass.body_right);
@@ -126,10 +125,7 @@
         return;
       }
 
-      console.log($body);
-      console.log($header);
-
-      if('open' === action || ('toogle' === action && !$menu.is(':visible'))) {
+      if('open' === action || ('toggle' === action && !$menu.is(':visible'))) {
         // Check if we can open it
         if( $menu.is(':visible') || sidrMoving ) { return; }
 
@@ -137,21 +133,19 @@
           console.log('open in landscape');
 
           if(side === 'left') {
-            headerAnimation = { 'width': bodyWidth - menuWidth };
+            headerAnimation = { 'padding-left': menuWidth + 'px' };
             bodyAnimation = {'margin-left': menuWidth + 'px'};
             menuAnimation = {left: '0'};
           } else if(side === 'right') {
-            headerAnimation = { 'right': menuWidth + 'px', 'width': bodyWidth - menuWidth };
+            headerAnimation = { 'padding-right': menuWidth + 'px' };
             bodyAnimation = {'margin-right': menuWidth + 'px'};
             menuAnimation = {right: '0'};
           }
 
-          if(side === 'right') {
-            $header.css({'right': 0});
-          }
-
           $header.animate(headerAnimation, speed, function() {
-            $header.removeAttr('style').addClass(responsiveClass.header);
+            $header.removeAttr('style')
+              .addClass(responsiveClass.header_class(side))
+              .css('display', 'block');
           });
           $body.animate(bodyAnimation, speed, function() {
             $body.removeAttr('style').addClass(responsiveClass.body_class(side));
@@ -176,6 +170,7 @@
           return;
         } else { // open in portrait
 
+          console.log('open in portrait');
           if(side === 'left') {
             headerAnimation = bodyAnimation = {left: menuWidth + 'px'};
             menuAnimation = {left: '0px'};
@@ -185,10 +180,13 @@
           }
 
           $header.animate(headerAnimation, speed, function() {
-            $header.removeAttr('style').addClass(responsiveClass.header_portrait_class(side));
+            $header.removeAttr('style')
+              .addClass(responsiveClass.header_portrait_class(side))
+              .css('display', 'block');
           });
           $body.animate(bodyAnimation, speed, function() {
-            $body.removeAttr('style').addClass(responsiveClass.body_portrait_class(side));
+            $body.removeAttr('style')
+              .addClass(responsiveClass.body_portrait_class(side));
           });
 
           // render the menu before animation
@@ -229,6 +227,7 @@
           };
 
           if(side === 'left') {
+            headerAnimation = { 'padding-left': 0, 'width': bodyWidth + menuWidth }; // width in safari
             bodyAnimation = {'margin-left': 0};
             menuAnimation = {left: '-' + menuWidth + 'px'};
           } else if(side === 'right') {
@@ -238,9 +237,11 @@
 
           $header.animate(headerAnimation, speed, function() {
             $header.removeAttr('style')
-              .removeClass(responsiveClass.header)
+              .removeClass(responsiveClass.header_left)
+              .removeClass(responsiveClass.header_right)
               .removeClass(responsiveClass.header_left_portrait)
-              .removeClass(responsiveClass.header_right_portrait);
+              .removeClass(responsiveClass.header_right_portrait)
+              .css('display', 'block');
           });
 
           $body.animate(bodyAnimation, speed, function() {
@@ -276,9 +277,11 @@
 
           $header.animate(headerAnimation, speed, function() {
             $header.removeAttr('style')
-              .removeClass(responsiveClass.header)
+              .removeClass(responsiveClass.header_left)
+              .removeClass(responsiveClass.header_right)
               .removeClass(responsiveClass.header_left_portrait)
-              .removeClass(responsiveClass.header_right_portrait);
+              .removeClass(responsiveClass.header_right_portrait)
+              .css('display', 'block');
           });
           $body.animate(bodyAnimation, speed, function() {
             $body.removeAttr('style')
@@ -341,8 +344,8 @@
     close: function(name, callback) {
       privateMethods.execute('close', name, callback);
     },
-    toogle: function(name, callback) {
-      privateMethods.execute('toogle', name, callback);
+    toggle: function(name, callback) {
+      privateMethods.execute('toggle', name, callback);
     }
   };
 
@@ -351,7 +354,7 @@
     if ( methods[method] ) {
       return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
     } else if ( typeof method === 'function' ||  typeof method === 'string'  || ! method ) {
-      return methods.toogle.apply( this, arguments );
+      return methods.toggle.apply( this, arguments );
     } else {
       $.error( 'Method ' +  method + ' does not exist on jQuery.sidr' );
     }
@@ -390,7 +393,6 @@
         header         : settings.header,
         body           : settings.body
       });
-
 
     // The menu content
     if(typeof settings.source === 'function') {
@@ -431,7 +433,7 @@
         $this.data('sidr', name);
         $this.on('click', function(e) {
           e.preventDefault();
-          methods.toogle(name);
+          methods.toggle(name);
         });
       }
     });
