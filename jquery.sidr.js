@@ -2,7 +2,6 @@
 
   var sidrMoving = false;
   var sidrOpened = false;
-
   var screenWidth = 767;
 
   responsiveClass = {
@@ -129,7 +128,6 @@
       }
 
       // close the menu
-
       if(!$menu.is(':visible') || sidrMoving) { return; }
 
       $header
@@ -170,23 +168,20 @@
     }
   };
 
-  $.sidr = function( method ) {
-
-    if ( methods[method] ) {
+  $.sidr = function(method) {
+    if (methods[method]) {
       return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-    } else if ( typeof method === 'function' ||  typeof method === 'string'  || ! method ) {
+    } else if (typeof method === 'function' ||  typeof method === 'string'  || ! method) {
       return methods.toggle.apply( this, arguments );
     } else {
       $.error( 'Method ' +  method + ' does not exist on jQuery.sidr' );
     }
-
   };
 
   $.fn.sidr = function( options ) {
 
     var settings = $.extend( {
       name          : 'sidr', // Name for the 'sidr'
-      speed         : 200,    // Accepts standard jQuery effects speeds (i.e. fast, normal or milliseconds)
       side          : 'left', // Accepts 'left' or 'right'
       source        : null,   // Override the source of the content.
       renaming      : true,   // The ids and classes will be prepended with a prefix when loading existent content
@@ -209,7 +204,6 @@
       .addClass('sidr')
       .addClass('sidr-' + settings.side)
       .data({
-        speed          : settings.speed,
         side           : settings.side,
         header         : settings.header,
         body           : settings.body
@@ -248,7 +242,7 @@
       $.error('Invalid Sidr Source');
     }
 
-    return this.each(function(){
+    return this.each(function() {
 
       var $this = $(this),
         data = $this.data('sidr');
