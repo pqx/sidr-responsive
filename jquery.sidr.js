@@ -14,7 +14,7 @@
     content: 'sidr-content',
 
     menu_left_portrait: 'sidr-menu-left-portrait',
-    menu_right_portrait: 'sidr-menu-left-portrait',
+    menu_right_portrait: 'sidr-menu-right-portrait',
     body_left_portrait: 'sidr-body-left-portrait',
     body_right_portrait: 'sidr-body-right-portrait',
     header_left_portrait: 'sidr-header-left-portrait',
@@ -36,6 +36,9 @@
     },
     header_portrait_class: function(side) {
       return (side === 'left') ? responsiveClass.header_left_portrait : responsiveClass.header_right_portrait;
+    },
+    menu_portrait_class: function(side) {
+      return (side === 'left') ? responsiveClass.menu_left_portrait : responsiveClass.menu_right_portrait;
     }
   };
 
@@ -121,8 +124,19 @@
           $menu.addClass(responsiveClass.menu_class(side));
         } else { // open in portrait
           $header.addClass(responsiveClass.header_portrait_class(side));
-          $body.addClass(responsiveClass.body_portrait_class(side));
-          $menu.addClass(responsiveClass.menu_left_portrait);
+          $body.addClass(responsiveClass.body_portrait_class(side)).css({
+            width: bodyWidth + 'px'
+          });
+
+          // fix for resizing from portrait to landscape
+          window.sidr_resize = true;
+          $(window).resize(function(e) {
+            if(window.sidr_resize) {
+              $body.css('width', 'auto');
+            }
+          });
+
+          $menu.addClass(responsiveClass.menu_portrait_class(side));
         }
         return;
       }

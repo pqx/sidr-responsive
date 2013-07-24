@@ -6,10 +6,11 @@
   top: 0;
   height: 100%;
   z-index: 999999;
-  overflow-x: none;
-  overflow-y: auto;
   background: #f8f8f8;
   color: #333;
+
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidr-left {
@@ -52,6 +53,9 @@
   .sidr-body-right-portrait { position: static; margin: 0 260px 0 0; }
   .sidr-menu-left-portrait { display: block; }
   .sidr-menu-right-portrait { display: block; }
+
+  .sidr-fixed-left { left: 264px;}
+  .sidr-fixed-right { right: 264px;}
 }
 
 
