@@ -130,12 +130,14 @@
 
           // fix for resizing from portrait to landscape
           window.sidr_resize = true;
-          $(window).resize(function(e) {
+          $(window).on('resize.sidr', function(e) {
+            console.log('hello world');
             if(window.sidr_resize) {
               $body.css('width', 'auto');
+              window.sidr_resize = false;
+              $(window).off('resize.sidr');
             }
           });
-
           $menu.addClass(responsiveClass.menu_portrait_class(side));
         }
         return;
