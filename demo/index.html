@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Sidr responsive demo</title>
+    <meta name="viewport" content="user-scalable=no,initial-scale = 1.0,maximum-scale = 1.0">
+    <link rel="stylesheet" type="text/css" href="topcoat/css/topcoat-mobile-dark.css">
+    <link rel="stylesheet" type="text/css" href="topcoat/css/main.css">
+    <link rel="stylesheet" type="text/css" href="topcoat/css/brackets.css"><!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="../sidr-responsive.css">
+
+    <style type="text/css">
+      #header {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        z-index: 100;
+      }
+      #container {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="topcoat-navigation-bar" id="header">
+      <div class="topcoat-navigation-bar__item left quarter">
+        <a class="topcoat-icon-button--quiet" id="left-menu">
+          <span class="topcoat-icon topcoat-icon--menu-stack"></span>
+        </a>
+      </div>
+      <div class="topcoat-navigation-bar__item center half">
+        <h1 class="topcoat-navigation-bar__title">#header</h1>
+      </div>
+
+      <div class="topcoat-navigation-bar__item right quarter">
+        <a class="topcoat-icon-button--quiet" id="right-menu">
+          <span class="topcoat-icon topcoat-icon--menu-stack"></span>
+        </a>
+      </div>
+    </div>
+
+    <div id="container">
+
+    </div>
+
+    <div id="sidr-left">
+      <div class="topcoat-list__container">
+        <h3 class="topcoat-list__header">Amet Adipiscing</h3>
+        <ul class="topcoat-list">
+          <li class="topcoat-list__item">Ridiculus Cras Porta</li>
+          <li class="topcoat-list__item">Vestibulum Dapibus Elit</li>
+          <li class="topcoat-list__item">Tristique Magna Fermentum</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="sidr-right">
+      <div class="topcoat-list__container">
+        <h3 class="topcoat-list__header">Vestibulum Nullam</h3>
+        <ul class="topcoat-list">
+          <li class="topcoat-list__item">Inceptos Commodo Sollicitudin</li>
+          <li class="topcoat-list__item">Risus Inceptos Ligula</li>
+          <li class="topcoat-list__item">Commodo Porta Vulputate</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Include jQuery -->
+    <script src="../jquery.js"></script>
+
+    <script type="text/javascript" src="lipsum.js"></script>
+    <!-- Include the Sidr JS -->
+    <script src="../jquery.sidr.js"></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/html-inspector/0.4.0/html-inspector.js"></script>
+
+    <script>
+    $(document).ready(function() {
+      $('#left-menu').sidr({
+        side: 'left',
+        name: 'sidr-left',
+        header: '#header',
+        body: '#container'
+      });
+
+      $('#right-menu').sidr({
+        side: 'right',
+        name: 'sidr-right',
+        header: '#header',
+        body: '#container'
+      });
+
+      // $.sidr('init', 'sidr-left');
+      // $.sidr('init', 'sidr-right');
+
+      $('#container').lipsum({ type: 'paragraphs', number: '13' });    });
+    </script>
+  </body>
+</html>

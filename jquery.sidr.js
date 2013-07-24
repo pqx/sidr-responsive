@@ -258,15 +258,23 @@
 
     return this.each(function() {
 
-      var $this = $(this),
-        data = $this.data('sidr');
+      var $this = $(this);
+      var data = $this.data('sidr');
 
       if(!data) {
         $this.data('sidr', name);
-        $this.on('click', function(e) {
-          e.preventDefault();
-          methods.toggle(name);
-        });
+
+        if($.mobile) {
+          $this.on('tap', function(e) {
+            e.preventDefault();
+            methods.toggle(name);
+          });
+        } else {
+          $this.on('click', function(e) {
+            e.preventDefault();
+            methods.toggle(name);
+          });
+        }
       }
     });
   };
